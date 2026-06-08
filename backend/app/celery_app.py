@@ -40,17 +40,17 @@ def scan_repo_task(self, repo_url: str):
     pdf_path = generate_pdf(job_id, findings, repo_path)
 
     #? Move the pdf to a safe space and then remove the code
-    reports_dir = '/tmp/devguard/reports'
-    os.makedirs(reports_dir, exist_ok=True)
-    final_pdf_path = os.path.join(reports_dir, f'{job_id}.pdf')
+    # reports_dir = '/tmp/devguard/reports'
+    # os.makedirs(reports_dir, exist_ok=True)
+    # final_pdf_path = os.path.join(reports_dir, f'{job_id}.pdf')
 
-    shutil.move(pdf_path, final_pdf_path)
+    # shutil.move(pdf_path, final_pdf_path)
 
     return {
       'status': 'completed',
       'repo': repo_url,
       'findings_count': len(findings),
-      'report_path': final_pdf_path,
+      # 'report_path': final_pdf_path,
       'findings': findings
     }
   except subprocess.CalledProcessError as e:

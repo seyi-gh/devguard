@@ -12,8 +12,16 @@ def run_bandit(repo_path: str) -> list:
 
   try:
     data = json.loads(result.stdout or '{}')
-    print('> Data:', data)
-    return data.get('results', [])
+    raw_results = data.get('results', [])
+
+    findings = []
+    for item in raw_results:
+      findings.append({
+        'tool': 'bandit',
+        'severity': item.get('issue_severity', 'LOW').upper(),
+        'message': f'[{item.get('test_name', 'Vuln')}] {item.get('issue_text', 'No description')} (File: {item.get('filename', 'Unknown')})'
+      })
+
+    return findings
   except Exception as e:
-    print('> Error:', e) #? Debug
     return []

@@ -9,28 +9,31 @@
         .summary { background: #ecf0f1; padding: 20px; border-radius: 5px; margin-bottom: 30px; }
         .critical { color: #e74c3c; font-weight: bold; }
         .high { color: #e67e22; font-weight: bold; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { border: 1px solid #bdc3c7; padding: 12px; text-align: left; }
+        .medium { color: #f1c40f; font-weight: bold; }
+        .low { color: #3498db; font-weight: bold; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 14px; }
+        th, td { border: 1px solid #bdc3c7; padding: 10px; text-align: left; }
         th { background-color: #34495e; color: white; }
     </style>
 </head>
 <body>
-    <h1>Reporte de Auditoría DevGuard</h1>
+    <h1>DevGuard Security Audit Report</h1>
     
     <div class="summary">
-        <h2>Resumen Ejecutivo</h2>
-        <p><strong>ID de Escaneo:</strong> {{ job_id }}</p>
-        <p><strong>Total de Vulnerabilidades CRÍTICAS:</strong> <span class="critical">{{ totals.critical }}</span></p>
-        <p><strong>Total de Vulnerabilidades ALTAS:</strong> <span class="high">{{ totals.high }}</span></p>
+        <h2>Executive Summary</h2>
+        <p><strong>Scan ID:</strong> {{ job_id }}</p>
+        <p><strong>Target Repository:</strong> {{ repo_url }}</p>
+        <p><strong>CRITICAL Vulnerabilities:</strong> <span class="critical">{{ totals.critical }}</span></p>
+        <p><strong>HIGH Vulnerabilities:</strong> <span class="high">{{ totals.high }}</span></p>
     </div>
 
-    <h2>Detalle de Hallazgos</h2>
+    <h2>Detailed Findings</h2>
     <table>
         <thead>
             <tr>
-                <th>Herramienta</th>
-                <th>Severidad</th>
-                <th>Descripción</th>
+                <th>Scanner</th>
+                <th>Severity</th>
+                <th>Description</th>
             </tr>
         </thead>
         <tbody>
@@ -42,7 +45,7 @@
             </tr>
             {% else %}
             <tr>
-                <td colspan="3" style="text-align: center;">No se encontraron vulnerabilidades. ¡Excelente trabajo!</td>
+                <td colspan="3" style="text-align: center;">No vulnerabilities found. Secure code!</td>
             </tr>
             {% endfor %}
         </tbody>
