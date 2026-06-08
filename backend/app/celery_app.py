@@ -2,7 +2,11 @@ import os
 import shutil
 import subprocess
 from celery import Celery
+
 from app.scanners.bandit import run_bandit
+from app.scanners.gitleaks import run_gitleaks
+
+from app.pdf import generate_pdf
 
 celery_app = Celery(
   'tasks',
@@ -13,8 +17,6 @@ celery_app = Celery(
 #? Health task for checking if the app is running
 @celery_app.task(name='ping_task')
 def ping_task(): return 'pong'
-
-
 
 
 @celery_app.task(name='scan_repo_task', bind=True) #? bind=True | Self integration lecture
@@ -30,11 +32,25 @@ def scan_repo_task(self, repo_url: str):
       capture_output=True
     )
 
+    #? Combining the scanners for better results
     findings = run_bandit(repo_path)
+    findings.extend(run_bandit(repo_path))
+    findings.extend(run_gitleaks(repo_path))
+
+    pdf_path = generate_pdf(job_id, findings, repo_path)
+
+    #? Move the pdf to a safe space and then remove the code
+    reports_dir = '/tmp/devguard/reports'
+    os.makedirs(reports_dir, exist_ok=True)
+    final_pdf_path = os.path.join(reports_dir, f'{job_id}.pdf')
+
+    shutil.move(pdf_path, final_pdf_path)
 
     return {
       'status': 'completed',
       'repo': repo_url,
+      'findings_count': len(findings),
+      'report_path': final_pdf_path,
       'findings': findings
     }
   except subprocess.CalledProcessError as e:

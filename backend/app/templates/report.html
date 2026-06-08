@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DevGuard Security Report</title>
+    <style>
+        body { font-family: Helvetica, Arial, sans-serif; color: #333; margin: 40px; }
+        h1 { color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
+        .summary { background: #ecf0f1; padding: 20px; border-radius: 5px; margin-bottom: 30px; }
+        .critical { color: #e74c3c; font-weight: bold; }
+        .high { color: #e67e22; font-weight: bold; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #bdc3c7; padding: 12px; text-align: left; }
+        th { background-color: #34495e; color: white; }
+    </style>
+</head>
+<body>
+    <h1>Reporte de Auditoría DevGuard</h1>
+    
+    <div class="summary">
+        <h2>Resumen Ejecutivo</h2>
+        <p><strong>ID de Escaneo:</strong> {{ job_id }}</p>
+        <p><strong>Total de Vulnerabilidades CRÍTICAS:</strong> <span class="critical">{{ totals.critical }}</span></p>
+        <p><strong>Total de Vulnerabilidades ALTAS:</strong> <span class="high">{{ totals.high }}</span></p>
+    </div>
+
+    <h2>Detalle de Hallazgos</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Herramienta</th>
+                <th>Severidad</th>
+                <th>Descripción</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for finding in findings %}
+            <tr>
+                <td>{{ finding.tool | upper }}</td>
+                <td class="{{ finding.severity | lower }}">{{ finding.severity }}</td>
+                <td>{{ finding.message }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="3" style="text-align: center;">No se encontraron vulnerabilidades. ¡Excelente trabajo!</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
