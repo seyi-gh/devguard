@@ -12,6 +12,8 @@ def run_bandit(repo_path: str) -> list:
 
   try:
     data = json.loads(result.stdout or '{}')
+    print('> Data:', data)
     return data.get('results', [])
-  except json.JSONDecodeError:
+  except Exception as e:
+    print('> Error:', e) #? Debug
     return []
