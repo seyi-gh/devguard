@@ -1,0 +1,12 @@
+FROM node:20-alpine
+
+RUN apk update && apk upgrade && rm -rf /var/cache/apk/*
+
+WORKDIR /app
+
+COPY package*.json .
+RUN npm install
+
+COPY . .
+
+EXPOSE 3000
